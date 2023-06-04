@@ -1,7 +1,7 @@
 export default function Contact() {
   return (
     <div>
-      <h1 className="mb-6">Contact Me</h1>
+      <h1 className="mb-6">Get In Touch</h1>
       <p className="text-fade">
         Thank you for visiting my website! If you have any questions, inquiries,
         or would like to discuss a potential collaboration, I would love to hear
@@ -17,13 +17,13 @@ export default function Contact() {
       <div className="mt-12 space-x-3">
         <a
           href="#"
-          className="color-span p-3 border border-solid rounded-lg decoration-transparent duration-200 hover:bg-accent hover:text-white hover:brightness-100"
+          className="inline-block bg-accent bg-opacity-10 font-medium text-accent p-3 rounded-lg duration-200 hover:bg-accent hover:text-white"
         >
           Linkedin
         </a>
         <a
           href="#"
-          className="color-span p-3 border border-solid rounded-lg decoration-transparent duration-200 hover:bg-accent hover:text-white hover:brightness-100"
+          className="inline-block bg-accent bg-opacity-10 font-medium text-accent p-3 rounded-lg duration-200 hover:bg-accent hover:text-white"
         >
           Github
         </a>

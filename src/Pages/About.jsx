@@ -49,7 +49,7 @@ export default function About() {
       <div className="mt-12 space-x-3">
         <a
           href="#"
-          className="color-span p-3 border border-solid rounded-lg decoration-transparent duration-200 hover:bg-accent hover:text-white hover:brightness-100"
+          className="inline-block bg-accent bg-opacity-10 font-medium text-accent p-3 rounded-lg duration-200 hover:bg-accent hover:text-white"
         >
           Download CV
         </a>

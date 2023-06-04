@@ -6,7 +6,7 @@ export default function Articles() {
         <div>
           <a
             href="/entry"
-            className="p-6 mb-4 block border border-disabled hover:bg-disabled hover:bg-opacity-30"
+            className="p-6 mb-4 block border border-disabled rounded-lg hover:bg-disabled hover:bg-opacity-30"
           >
             <h2 className="font-medium mb-3 text-[20px] md:text-[27px]">
               Intent-Based Architectures and Their Risks

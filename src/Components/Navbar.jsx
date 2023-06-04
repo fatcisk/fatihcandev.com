@@ -31,13 +31,13 @@ export default function Navbar() {
           Contact
         </a>
       </div>
-      <div className="md:hidden mb-20 mt-4 pb-4 border-b border-disabled">
+      <div className="md:hidden mb-20 py-4 border-b border-disabled">
         <div className="flex justify-end">
           <img
             onClick={openMobileNav}
             src="/menu.png"
             alt=""
-            className="h-10 opacity-50"
+            className="h-10 opacity-40"
           />
         </div>
       </div>
