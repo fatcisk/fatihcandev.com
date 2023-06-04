@@ -3,10 +3,17 @@ export default function Contact() {
     <div>
       <h1 className="mb-6">Contact Me</h1>
       <p className="text-fade">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas nihil
-        nam tenetur placeat magnam mollitia!
+        Thank you for visiting my website! If you have any questions, inquiries,
+        or would like to discuss a potential collaboration, I would love to hear
+        from you. Please feel free to reach out to me using the contact
+        information provided below.
       </p>
-      <h2 className="mt-8">Email: contact@fatihdev.com</h2>
+      <h2 className="mt-8">
+        Email:{" "}
+        <a className="hover:text-accent" href="mailto:contact@fatihdev.com">
+          contact@fatihdev.com
+        </a>
+      </h2>
       <div className="mt-12 space-x-3">
         <a
           href="#"

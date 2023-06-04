@@ -31,7 +31,7 @@ export default function Navbar() {
           Contact
         </a>
       </div>
-      <div className="md:hidden mb-20 mt-8 p-3 border-b border-disabled">
+      <div className="md:hidden mb-20 mt-4 pb-4 border-b border-disabled">
         <div className="flex justify-end">
           <img
             onClick={openMobileNav}
