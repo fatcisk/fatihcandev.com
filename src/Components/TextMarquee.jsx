@@ -2,7 +2,7 @@ import Marquee from "react-fast-marquee";
 
 export default function TextMarquee() {
   return (
-    <div>
+    <div className="mb-32">
       <Marquee autoFill>
         <h1 className="px-2">Solidity</h1>
         <h1 className="px-2 text-accent">Foundry</h1>

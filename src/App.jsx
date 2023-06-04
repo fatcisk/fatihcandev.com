@@ -6,10 +6,9 @@ import Home from "./Pages/Home";
 
 export default function App() {
   return (
-    <div className="pb-64">
+    <div className="pb-40">
       <Home />
       <Marquee />
-      <h1 className="mt-32">Articles</h1>
       <Articles />
     </div>
   );
