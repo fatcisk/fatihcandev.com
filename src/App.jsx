@@ -6,7 +6,7 @@ import Home from "./Pages/Home";
 
 export default function App() {
   return (
-    <div className="pb-40">
+    <div className="">
       <Home />
       <Marquee />
       <Articles />
