@@ -7,10 +7,12 @@ export default function Home() {
         <span className="text-accent font-medium">Blockchain Developer</span>
       </h1>
       <p>
-        Welcome to my blockchain developer portfolio. With expertise in Solidity
-        and smart contract development, I build secure and scalable blockchain
-        solutions that drive innovation and reshape industries. Let's build the
-        decentralized future together.
+        I am a blockchain developer with a deep understanding of Solidity,
+        capable of creating secure and efficient smart contracts. Additionally,
+        my experience as a full-stack developer empowers me to tackle complex
+        challenges across the entire development stack. I am dedicated to
+        delivering innovative blockchain solutions that drive transformative
+        impact.
       </p>
       <div className="mt-10 space-x-3">
         <a
