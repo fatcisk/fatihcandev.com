@@ -2,7 +2,7 @@ import { CodeBlock, CopyBlock, dracula } from "react-code-blocks";
 
 export default function CodeSnippet({ codeText }) {
     return (
-        <div className="mb-12 rounded-xl overflow-hidden">
+        <div className="mb-12 sm:text-base text-[10px] rounded-xl overflow-hidden">
             <CodeBlock
                 text={codeText}
                 language="javascript"
