@@ -12,6 +12,7 @@ export default function Dvd1() {
                 {p.date} <span className="inline-block mx-4">|</span> Written by
                 Fatih Isik
             </p>
+            <h2 className="mb-6">Challenge 2: Naive Receiver</h2>
             <p>
                 There’s a pool with 1000 ETH in balance, offering flash loans.
                 It has a fixed fee of 1 ETH.
