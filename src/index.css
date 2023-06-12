@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inconsolata&display=swap");
 
 * {
   margin: 0;
@@ -24,8 +24,11 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-weight: 500;
+}
+
+code > span {
+  font-weight: 500;
 }
 
 p {
@@ -46,6 +49,12 @@ h2 {
   color: #00e100;
   filter: brightness(0.8);
   font-weight: 500;
+}
+
+.code-h {
+  background-color: rgb(233, 233, 233);
+  padding: 2px 6px;
+  border-radius: 5px;
 }
 
 a {

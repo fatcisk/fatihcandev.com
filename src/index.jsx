@@ -19,7 +19,7 @@ root.render(
         <Route path="/articles" element={<Articles />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/entry" element={<Entry />} />
+        <Route path="/post/:id" element={<Entry />} />
       </Routes>
     </Router>
   </React.StrictMode>
