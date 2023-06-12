@@ -12,7 +12,7 @@ export default function Dvd1() {
                 {p.date} <span className="inline-block mx-4">|</span> Written by
                 Fatih Isik
             </p>
-            <h2 className="mb-6">Challenge 2: Naive Receiver</h2>
+            <h2 className="mb-6 color-span">Challenge 2: Naive Receiver</h2>
             <p>
                 There’s a pool with 1000 ETH in balance, offering flash loans.
                 It has a fixed fee of 1 ETH.
@@ -30,21 +30,22 @@ export default function Dvd1() {
             <p>
                 Flash loan receiver contract does not have any access control
                 over
-                <span className="code-h">onFlashLoan()</span> function, thus
-                anyone can get flash loan behalf of the contract.
+                <span className="code-h">onFlashLoan()</span> function. Anyone
+                can call the function and take flash loans behalf of the
+                contract.
             </p>
             <p>
                 To solve this challenge we will deploy another contract that
-                takes flash loan 10 times behalf of the flash loan receiver
-                contract. After the loop we will be paid 10 ETH in fees and the
-                balance of the receiver will be 0.
+                takes 10 flash loans behalf of the flash loan receiver contract.
+                Total amount of 10 ETH in fees (1 ETH for each flash loan) will
+                be paid by flash loan receiver contract. At the end of the
+                transaction all the ETH in the contract will be drained.
             </p>
             <CodeSnippet codeText={p.snippets[0]} />
             <p>
-                In the test file we deploy the attack contract first then call
+                In our solution we deploy the attack contract first then call
                 the <span className="code-h">init()</span> function which will
-                take flash loans behalf of the flash loan receiver contract and
-                drain the ETH in it.
+                take 10 flash loans and drain the ETH in the receiver contract.
             </p>
             <CodeSnippet codeText={p.snippets[1]} />
         </div>
