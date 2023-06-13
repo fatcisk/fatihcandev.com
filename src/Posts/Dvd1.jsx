@@ -1,5 +1,6 @@
 import Posts from "../Components/Posts";
 import CodeSnippet from "../Components/CodeSnippet";
+import ChallengeInfo from "../Components/ChallengeInfo";
 
 export default function Dvd1() {
     const p = Posts.posts.find(
@@ -12,7 +13,9 @@ export default function Dvd1() {
                 {p.date} <span className="inline-block mx-4">|</span> Written by
                 Fatih Isik
             </p>
-            <h2 className="mb-6 color-span">Challenge 1: Unstoppable</h2>
+            <ChallengeInfo />
+
+            <h2 className="mb-6 color-span">Challenge #1: Unstoppable</h2>
             <p>
                 Here is the first Damn Vulnerable DeFi challenge that is one of
                 the easiest one out there. The challenge description goes like

@@ -8,19 +8,21 @@ import Navbar from "./Components/Navbar";
 import Articles from "./Pages/Articles";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
+import Footer from "./Components/Footer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Navbar />
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/articles" element={<Articles />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/post/:id" element={<Entry />} />
-      </Routes>
-    </Router>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Navbar />
+        <Router>
+            <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/articles" element={<Articles />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/post/:id" element={<Entry />} />
+            </Routes>
+        </Router>
+        {/* <Footer /> */}
+    </React.StrictMode>
 );

@@ -1,7 +1,8 @@
 import Posts from "../Components/Posts";
 import CodeSnippet from "../Components/CodeSnippet";
+import ChallengeInfo from "../Components/ChallengeInfo";
 
-export default function Dvd1() {
+export default function Dvd3() {
     const p = Posts.posts.find(
         (o) => o.id === "damn-vulnerable-defi-solutions-3-truster"
     );
@@ -12,7 +13,9 @@ export default function Dvd1() {
                 {p.date} <span className="inline-block mx-4">|</span> Written by
                 Fatih Isik
             </p>
-            <h2 className="mb-6 color-span">Challenge 3: Truster</h2>
+            <ChallengeInfo />
+
+            <h2 className="mb-6 color-span">Challenge #3: Truster</h2>
             <p>
                 More and more lending pools are offering flash loans. In this
                 case, a new pool has launched that is offering flash loans of

