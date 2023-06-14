@@ -60,7 +60,6 @@ contract Exploit_NaiveReceiver {
             date: "June 2, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -107,7 +106,6 @@ contract Exploit_Truster {
             date: "June 3, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 interface ISideEntranceLenderPool {
