@@ -6,6 +6,7 @@ import Dvd1 from "../Posts/Dvd1";
 import Dvd2 from "../Posts/Dvd2";
 import Dvd3 from "../Posts/Dvd3";
 import Dvd4 from "../Posts/Dvd4";
+import Dvd5 from "../Posts/Dvd5";
 
 export default function Entry() {
     const { id } = useParams();
@@ -38,8 +39,13 @@ export default function Entry() {
                 <OtherNav />
             </>
         );
-    } else if (id === "damn-vulnerable-defi-solutions-3-truster") {
-        return <Dvd3 />;
+    } else if (id === "damn-vulnerable-defi-solutions-5-the-rewarder") {
+        return (
+            <>
+                <Dvd5 />
+                <OtherNav />
+            </>
+        );
     } else if (id === "damn-vulnerable-defi-solutions-3-truster") {
         return <Dvd3 />;
     } else if (id === "damn-vulnerable-defi-solutions-3-truster") {

