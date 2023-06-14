@@ -14,9 +14,9 @@ export default function ChallengeInfo() {
                 timelocks, and more!
             </p>
             <p>
-                I will share all my solution for each challenge{" "}
+                I will share all of my solutions for each challenge{" "}
                 <a href="#" className="color-span hover:underline">
-                    in this Github repository.
+                    in this GitHub repository.
                 </a>
             </p>
         </div>

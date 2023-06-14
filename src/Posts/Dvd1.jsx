@@ -10,8 +10,8 @@ export default function Dvd1() {
         <div>
             <h1 className="mb-6 md:text-5xl/[1.2]">{p.title}</h1>
             <p className="text-fade text-sm">
-                {p.date} <span className="inline-block mx-4">|</span> Written by
-                Fatih Isik
+                {p.date} <span className="inline-block mx-4 opacity-50">|</span>{" "}
+                Written by Fatih Isik
             </p>
             <ChallengeInfo />
 

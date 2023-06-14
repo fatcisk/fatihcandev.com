@@ -10,8 +10,8 @@ export default function Dvd3() {
         <div>
             <h1 className="mb-6 md:text-5xl/[1.2]">{p.title}</h1>
             <p className="text-fade text-sm">
-                {p.date} <span className="inline-block mx-4">|</span> Written by
-                Fatih Isik
+                {p.date} <span className="inline-block mx-4 opacity-50">|</span>{" "}
+                Written by Fatih Isik
             </p>
             <ChallengeInfo />
 
@@ -42,11 +42,13 @@ export default function Dvd3() {
                 Here is the custom contract that we wrote. First, we construct
                 the payload that we will pass to the flash loan function. Then,
                 calling the flashLoan function with the correct arguments. After
-                that, we will have unlimited approval to pool tokens. To steal
-                the fund transfer the tokens from the pool to the receiver
-                address.
+                that, we will have unlimited approval to pool tokens. Finally,
+                to steal the funds we transfer the tokens from the pool to the
+                receiver address.
             </p>
             <CodeSnippet codeText={p.snippets[0]} />
+            <p>Test File</p>
+            <CodeSnippet codeText={p.snippets[1]} />
         </div>
     );
 }

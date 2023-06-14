@@ -10,8 +10,8 @@ export default function Dvd4() {
         <div>
             <h1 className="mb-6 md:text-5xl/[1.2]">{p.title}</h1>
             <p className="text-fade text-sm">
-                {p.date} <span className="inline-block mx-4">|</span> Written by
-                Fatih Isik
+                {p.date} <span className="inline-block mx-4 opacity-50">|</span>{" "}
+                Written by Fatih Isik
             </p>
             <ChallengeInfo />
             <h2 className="mb-6 color-span">Challenge #4: Side Entrance</h2>
@@ -28,9 +28,14 @@ export default function Dvd4() {
                 accounting systems for the same asset. To exploit this we simply
                 take all the funds in the lender contract as a flash loan and
                 repay the amount with the
-                <span className="code-h">deposit()</span> function.
+                <span className="code-h">deposit()</span> function. This way we
+                will be able to pass the balance check in{" "}
+                <span className="code-h">flashLoan()</span> function while
+                increasing the balance in the 'balances' mapping.
             </p>
             <CodeSnippet codeText={p.snippets[0]} />
+            <p>Test file</p>
+            <CodeSnippet codeText={p.snippets[1]} />
         </div>
     );
 }
