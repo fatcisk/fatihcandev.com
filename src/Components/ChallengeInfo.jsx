@@ -15,7 +15,10 @@ export default function ChallengeInfo() {
             </p>
             <p>
                 I will share all of my solutions for each challenge{" "}
-                <a href="#" className="color-span hover:underline">
+                <a
+                    href="https://github.com/uzayapiu/damn-vulnerable-defi"
+                    className="color-span hover:underline"
+                >
                     in this GitHub repository.
                 </a>
             </p>
