@@ -42,7 +42,7 @@ export default function Dvd7() {
                 69 5a 6a 42 6a 4f 57 5a 69 59 32 52 68 5a 54 4a 6d 4e 44 63 7a
                 4e 57 45 35
             </p>
-            <p className="text-red-600">
+            <p className="text-red-600 break-all">
                 Key1:
                 0xc678ef1aa456da65c6fc5861d44892cdfac0c6c8c2560bf0c9fbcdae2f4735a9
             </p>
@@ -53,7 +53,7 @@ export default function Dvd7() {
                 6c 4f 54 67 33 4e 57 5a 69 59 32 51 33 4d 7a 59 7a 4e 44 42 69
                 59 6a 51 34
             </p>
-            <p className="text-red-600">
+            <p className="text-red-600 break-all">
                 Key2:
                 0x208242c40acdfa9ed889e685c23547acbed9befc60371e9875fbcd736340bb48
             </p>
