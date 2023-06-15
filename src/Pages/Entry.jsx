@@ -9,6 +9,7 @@ import Dvd4 from "../Posts/Dvd4";
 import Dvd5 from "../Posts/Dvd5";
 import Dvd6 from "../Posts/Dvd6";
 import Dvd7 from "../Posts/Dvd7";
+import Dvd8 from "../Posts/Dvd8";
 
 export default function Entry() {
     const { id } = useParams();
@@ -59,6 +60,13 @@ export default function Entry() {
         return (
             <>
                 <Dvd7 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-8-puppet") {
+        return (
+            <>
+                <Dvd8 />
                 <OtherNav />
             </>
         );

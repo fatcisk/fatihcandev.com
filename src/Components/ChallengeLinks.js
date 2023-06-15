@@ -28,5 +28,9 @@ export default {
             link: "damn-vulnerable-defi-solutions-7-compromised",
             name: "Challenge #7: Compromised",
         },
+        {
+            link: "damn-vulnerable-defi-solutions-8-puppet",
+            name: "Challenge #8: Puppet",
+        },
     ],
 };
