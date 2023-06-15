@@ -20,5 +20,13 @@ export default {
             link: "damn-vulnerable-defi-solutions-5-the-rewarder",
             name: "Challenge #5: The Rewarder",
         },
+        {
+            link: "damn-vulnerable-defi-solutions-6-selfie",
+            name: "Challenge #6: Selfie",
+        },
+        {
+            link: "damn-vulnerable-defi-solutions-7-compromised",
+            name: "Challenge #7: Compromised",
+        },
     ],
 };
