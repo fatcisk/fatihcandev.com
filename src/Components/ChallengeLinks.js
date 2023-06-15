@@ -32,5 +32,9 @@ export default {
             link: "damn-vulnerable-defi-solutions-8-puppet",
             name: "Challenge #8: Puppet",
         },
+        {
+            link: "damn-vulnerable-defi-solutions-9-puppet-v2",
+            name: "Challenge #9: Puppet V2",
+        },
     ],
 };

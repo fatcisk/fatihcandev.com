@@ -2,7 +2,7 @@ import Posts from "../Components/Posts";
 import CodeSnippet from "../Components/CodeSnippet";
 import ChallengeInfo from "../Components/ChallengeInfo";
 
-export default function Dvd6() {
+export default function Dvd8() {
     const p = Posts.posts.find(
         (o) => o.id === "damn-vulnerable-defi-solutions-8-puppet"
     );
