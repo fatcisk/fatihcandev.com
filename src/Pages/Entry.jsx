@@ -11,6 +11,7 @@ import Dvd6 from "../Posts/Dvd6";
 import Dvd7 from "../Posts/Dvd7";
 import Dvd8 from "../Posts/Dvd8";
 import Dvd9 from "../Posts/Dvd9";
+import Dvd10 from "../Posts/Dvd10";
 
 export default function Entry() {
     const { id } = useParams();
@@ -75,6 +76,13 @@ export default function Entry() {
         return (
             <>
                 <Dvd9 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-10-free-rider") {
+        return (
+            <>
+                <Dvd10 />
                 <OtherNav />
             </>
         );

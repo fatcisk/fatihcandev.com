@@ -14,7 +14,8 @@ export default function ChallengeInfo() {
                 timelocks, and more!
             </p>
             <p>
-                I will share all of my solutions for each challenge{" "}
+                I will share all of my solutions to each challenge with detailed
+                explanations{" "}
                 <a
                     href="https://github.com/uzayapiu/damn-vulnerable-defi"
                     className="color-span hover:underline"
