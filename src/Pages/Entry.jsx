@@ -12,6 +12,8 @@ import Dvd7 from "../Posts/Dvd7";
 import Dvd8 from "../Posts/Dvd8";
 import Dvd9 from "../Posts/Dvd9";
 import Dvd10 from "../Posts/Dvd10";
+import Dvd11 from "../Posts/Dvd11";
+import Dvd12 from "../Posts/Dvd12";
 
 export default function Entry() {
     const { id } = useParams();
@@ -83,6 +85,20 @@ export default function Entry() {
         return (
             <>
                 <Dvd10 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-11-backdoor") {
+        return (
+            <>
+                <Dvd11 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-12-climber") {
+        return (
+            <>
+                <Dvd12 />
                 <OtherNav />
             </>
         );
