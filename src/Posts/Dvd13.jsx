@@ -50,7 +50,18 @@ export default function Dvd13() {
                 deployer contract. Oh, and the 20 million DVT tokens too.
             </p>
             <h2 className="mb-6">Solution</h2>
-            <p>desc</p>
+            <p>
+                In this challenge we are going to implement a cross chain replay
+                attack as well as exploiting the vulnerabilities in the auth
+                contract. You will find my solution to this challenge below. If
+                you want to see an extensive explanation I encourage you to read{" "}
+                <a
+                    href="https://systemweakness.com/damn-vulnerable-defi-v3-13-wallet-mining-solution-d5147533fa49"
+                    className="color-span hover:underline"
+                >
+                    this blog post
+                </a>
+            </p>
             <CodeSnippet codeText={p.snippets[0]} />
             <CodeSnippet codeText={p.snippets[1]} />
             <p>Test file</p>
