@@ -5,13 +5,15 @@ export default function About() {
         <div>
             <h1 className="mb-6">About Me</h1>
             <p>
-                As a blockchain developer, I am a dedicated and passionate
-                professional with a strong understanding of decentralized
-                technologies and their potential to transform various
-                industries. With a deep knowledge of blockchain architecture and
-                smart contract development, I thrive in designing and
-                implementing innovative solutions that leverage the power of
-                distributed ledger technology.
+                As a Blockchain developer, I have extensive experience in
+                designing, developing, and deploying smart contracts on various
+                EVM compatible blockchains. I possess a strong understanding of
+                EVM, various tools, libraries, and frameworks used in smart
+                contract development. Additionally, I am proficient in writing
+                efficient and secure code, performing code reviews, and
+                implementing testing methodologies. I am passionate about
+                blockchain technology and constantly strive to learn and
+                implement new advancements in the field.
             </p>
             <p>
                 With an eye for detail and a commitment to quality, I approach
