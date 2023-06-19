@@ -14,6 +14,9 @@ import Dvd9 from "../Posts/Dvd9";
 import Dvd10 from "../Posts/Dvd10";
 import Dvd11 from "../Posts/Dvd11";
 import Dvd12 from "../Posts/Dvd12";
+import Dvd13 from "../Posts/Dvd13";
+import Dvd14 from "../Posts/Dvd14";
+import Dvd15 from "../Posts/Dvd15";
 
 export default function Entry() {
     const { id } = useParams();
@@ -99,6 +102,27 @@ export default function Entry() {
         return (
             <>
                 <Dvd12 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-13-wallet-mining") {
+        return (
+            <>
+                <Dvd13 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-14-puppet-v3") {
+        return (
+            <>
+                <Dvd14 />
+                <OtherNav />
+            </>
+        );
+    } else if (id === "damn-vulnerable-defi-solutions-15-abi-smuggling") {
+        return (
+            <>
+                <Dvd15 />
                 <OtherNav />
             </>
         );

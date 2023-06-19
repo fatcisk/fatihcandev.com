@@ -48,5 +48,17 @@ export default {
             link: "damn-vulnerable-defi-solutions-12-climber",
             name: "Challenge #12: Climber",
         },
+        {
+            link: "damn-vulnerable-defi-solutions-13-wallet-mining",
+            name: "Challenge #13: Wallet Mining",
+        },
+        {
+            link: "damn-vulnerable-defi-solutions-14-puppet-v3",
+            name: "Challenge #14: Puppet V3",
+        },
+        {
+            link: "damn-vulnerable-defi-solutions-15-abi-smuggling",
+            name: "Challenge #15: ABI Smuggling",
+        },
     ],
 };

