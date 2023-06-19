@@ -10,7 +10,7 @@ export default function About() {
                 EVM compatible blockchains. I possess a strong understanding of
                 EVM, various tools, libraries, and frameworks used in smart
                 contract development. Additionally, I am proficient in writing
-                efficient and secure code, performing code reviews, and
+                efficient and secure Solidity code, performing code reviews, and
                 implementing testing methodologies. I am passionate about
                 blockchain technology and constantly strive to learn and
                 implement new advancements in the field.
