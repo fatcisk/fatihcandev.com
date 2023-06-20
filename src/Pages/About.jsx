@@ -39,7 +39,8 @@ export default function About() {
             </p>
             <div className="mt-12 space-x-3">
                 <a
-                    href="#"
+                    href="/resume.pdf"
+                    download
                     className="inline-block bg-accent bg-opacity-10 font-medium text-accent p-3 rounded-lg duration-200 hover:bg-accent hover:text-white"
                 >
                     Download CV
